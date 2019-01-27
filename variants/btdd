@@ -1,0 +1,2 @@
+echo -e "executing btdd variant"  &>>./tcrman/tcrman.log
+./tcrman/build && ./tcrman/test

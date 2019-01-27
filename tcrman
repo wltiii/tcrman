@@ -1,0 +1,269 @@
+#!/usr/bin/env bash
+#
+# performs initial installation of tcrman into a project
+#
+echo 'tcrman - (test && commit) || revert variant manager'
+
+# set default options
+#Initialize variables to default values.
+INSTALL_OPT="n"
+BUILD_OPT="gradle"
+TEST_OPT="gradle"
+VCS_OPT="git"
+TCR_OPT="rtcr"
+HELP_OPT="n"
+
+#Help function
+function HELP {
+    echo -e "NAME"
+    echo -e "\ttcrman - (test && commit) || revert variant manager"
+    echo -e "SYNOPSIS"
+    echo -e "\ttcrman [OPTION]"
+    echo -e "DESCRIPTION"
+    echo -e "\tInstalls tcr and manages variants."
+    echo -e ""
+    echo -e "\t-i"
+    echo -e "\t\tInstall tcr into project. Uses default tools if none specified."
+    echo -e "\t-s"
+    echo -e "\t\tShows configuration of current setup."
+    echo -e "\t-b"
+    echo -e "\t\tBuild tool commands to use."
+    echo -e "\t-t"
+    echo -e "\t\tTest tool commands to use."
+    echo -e "\t-v"
+    echo -e "\t\tVersion control tool commands to use."
+    echo -e "\t-x"
+    echo -e "\t\tThe tcr variant to use."
+    echo -e "\t-h"
+    echo -e "\t\tDisplay this help and exit."
+
+    echo -e "AUTHOR"
+    echo -e "\tWritten by Bill Turner."
+
+    echo -e "REPORTING BUGS"
+    echo -e "\tSee https://github.com/wltiii/tcrman"
+
+    echo -e "COPYRIGHT"
+    echo -e "\tCopyright © 2019 William Lodge Turner III"
+    echo -e "\tLicense GPLv3+: GNU GPL version 3 or later."
+    echo -e "\t<http://gnu.org/licenses/gpl.html>."
+    echo -e "\tThis is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law."
+    
+    exit 1
+}
+
+isHomeDefined() {
+    if [[ -z $TCRMAN_HOME ]]
+    then
+        echo -e "Environment variable TCRMAN_HOME must be defined to continue."
+        exit 1
+    fi
+
+    if [ ! -f $TCRMAN_HOME/tcrman ]; then
+        echo -e 'TCRMAN_HOME does not point to a valid directory. The directory must contain the tcrman script.'
+        exit 1
+    fi
+}
+
+showOptions() {
+    index=1
+
+    for arg in "$@"
+    do
+        echo -e "\t${index}. ${arg}"
+        let "index++"
+    done
+}
+
+showBuildOptions() {
+    echo "Valid build options:"
+
+    showOptions `\ls $TCRMAN_HOME/scripts/buildTools`
+}
+
+showTestOptions() {
+    echo "Valid test options:"
+
+    showOptions `\ls $TCRMAN_HOME/scripts/testTools`
+}
+
+showVcsOptions() {
+    echo "Valid vcs options:"
+
+    showOptions `\ls $TCRMAN_HOME/scripts/vcsTools`
+}
+
+showTcrVariants() {
+    echo "Valid tcr variants:"
+
+    showOptions `\ls $TCRMAN_HOME/variants`
+}
+
+show() {
+    showBuildOptions
+    showTestOptions
+    showVcsOptions
+    showTcrVariants
+    exit 0
+}
+
+setBuild() {
+    echo -e "configuring build automation to: " $BUILD_OPT  &>>./tcrman/tcrman.log
+
+    if [ ! -f $TCRMAN_HOME/scripts/buildTools/$BUILD_OPT/build ]; then
+        echo -e 'Build automation tool '${BUILD_OPT}' is invalid.'
+        echo -e 'Build automation tool '${BUILD_OPT}' is invalid.' &>>./tcrman/tcrman.log
+        showBuildOptions
+        exit 1
+    fi
+
+    ln -sfv $TCRMAN_HOME/scripts/buildTools/$BUILD_OPT/build ./tcrman/build &>>./tcrman/tcrman.log
+    chmod u+x ./tcrman/build &>>./tcrman/tcrman.log
+}
+
+setTest() {
+    echo -e "configuring test command to use: " $TEST_OPT &>>./tcrman/tcrman.log
+    
+    if [ ! -f $TCRMAN_HOME/scripts/testTools/$TEST_OPT/test ]; then
+        echo -e 'Test automation tool '${TEST_OPT}' is invalid.'
+        echo -e 'Test automation tool '${TEST_OPT}' is invalid.' &>>./tcrman/tcrman.log
+        showTestOptions
+        exit 1
+    fi
+
+    ln -sfv $TCRMAN_HOME/scripts/testTools/$TEST_OPT/test ./tcrman/test &>>./tcrman/tcrman.log
+    chmod u+x ./tcrman/test &>>./tcrman/tcrman.log
+}
+
+setVcs() {
+    echo -e "configuring version control system to use: " $VCS_OPT  &>>./tcrman/tcrman.log
+    
+    if [ ! -f $TCRMAN_HOME/scripts/vcsTools/$VCS_OPT/commit ]; then
+        echo -e 'Version control tool '${VCS_OPT}' is invalid.'
+        echo -e 'Version control tool '${VCS_OPT}' is invalid.' &>>./tcrman/tcrman.log
+        showTestOptions
+        exit 1
+    fi
+
+    ln -sfv $TCRMAN_HOME/scripts/vcsTools/$VCS_OPT/commit ./tcrman/commit &>>./tcrman/tcrman.log
+    chmod u+x ./tcrman/commit &>>./tcrman/tcrman.log
+    ln -sfv $TCRMAN_HOME/scripts/vcsTools/$VCS_OPT/revert-all ./tcrman/revert-all &>>./tcrman/tcrman.log
+    chmod u+x ./tcrman/revert-all &>>./tcrman/tcrman.log
+    ln -sfv $TCRMAN_HOME/scripts/vcsTools/$VCS_OPT/revert-source ./tcrman/revert-source &>>./tcrman/tcrman.log
+    chmod u+x ./tcrman/revert-source &>>./tcrman/tcrman.log
+}
+
+setTcrVariant() {
+    echo -e "configuring tcr variant to use: " $TCR_OPT &>>./tcrman/tcrman.log
+    
+    if [ ! -f $TCRMAN_HOME/variants/$TCR_OPT ]; then
+        echo -e 'TCR variant '${TCR_OPT}' is invalid.'
+        echo -e 'TCR variant '${TCR_OPT}' is invalid.' &>>./tcrman/tcrman.log
+        showTcrVariants
+        exit 1
+    fi
+
+    ln -sfv $TCRMAN_HOME/variants/$TCR_OPT ./tcrman/tcr &>>./tcrman/tcrman.log
+    ln -sfv ./tcrman/tcr ./tcr &>>./tcrman/tcrman.log
+    chmod u+x tcr
+}
+
+configure() {
+    setBuild
+    setTest
+    setVcs
+    setTcrVariant
+}
+
+init() {
+    if [ ! -d "./tcrman" ]; then
+        mkdir ./tcrman
+    fi
+}
+
+install() {
+    isHomeDefined
+    init
+
+    echo "###################"  &>>./tcrman/tcrman.log
+    echo "# TCRMAN starting #"  &>>./tcrman/tcrman.log
+    echo "###################"  &>>./tcrman/tcrman.log
+    echo -e "tcrman: configuring tcr for use with..."
+    echo -e "\tbuild automation: " $BUILD_OPT
+    echo -e "\ttest: " $TEST_OPT
+    echo -e "\tversion control: " $VCS_OPT
+    echo -e "\ttcr variant:" $TCR_OPT
+
+    configure
+}
+
+
+#Check the number of arguments. If none are passed, print help and exit.
+NUMARGS=$#
+if [ $NUMARGS -eq 0 ]; then
+  echo -e "\nNo options specified.\n"
+  HELP
+fi
+
+# TODO should x for setting variant be v? then what for vcs?)
+# TODO implement s for showing current configuration
+# TODO implement - for long options
+# process options
+# optspec=":hib:t:v:x:s-:"
+optspec=":hisb::t:v:x:"
+while getopts "$optspec" optchar; do
+        case "${optchar}" in
+        #TODO implement long args
+        #   -)
+        #     case ${OPTARG} in
+        #         install)
+        #         build)
+        #         test)
+        #         vcs)
+        #         *)
+        #             if [ "$OPTERR" = 1 ] && [ "${optspec:0:1}" != ":" ]; then
+        #                 echo "Unknown option --${OPTARG}" >&2
+        #             fi
+        #             ;;
+          b)
+            BUILD_OPT=$OPTARG
+            ;;
+          t)
+            TEST_OPT=$OPTARG
+            ;;
+          v)
+            VCS_OPT=$OPTARG
+            ;;
+          x)
+            TCR_OPT=$OPTARG
+            ;;
+          i)
+            INSTALL_OPT="y"
+            ;;
+          h)
+            HELP
+            ;;
+          s)
+            show
+            ;;
+          *)
+            # echo "Parsing build option: '-${optchar}'" >&2
+            echo -e "\nInvalid option '-${optchar}'. See below.\n"
+            echo -e "\nInvalid option '-${optchar}'. See below.\n" &>>./tcrman/tcrman.log
+            # HELP
+            ;;
+        esac
+done
+
+# if [[ ! -z $INSTALL_OPT ]]
+# then
+#     if [[ $INSTALL_OPT="y" ]]
+#     then
+#         install
+#     fi
+# fi
+
+install
+
+shift $(($OPTIND -1))
+

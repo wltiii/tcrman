@@ -1,0 +1,2 @@
+echo -e 'running gradle test.' &>>./tcrman/tcrman.log
+./gradlew test

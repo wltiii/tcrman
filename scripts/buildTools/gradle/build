@@ -1,0 +1,2 @@
+echo -e 'running gradle build.' &>>./tcrman/tcrman.log
+./gradlew build -x test

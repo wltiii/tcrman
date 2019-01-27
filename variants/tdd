@@ -1,0 +1,2 @@
+echo -e "executing tdd variant"  &>>./tcrman/tcrman.log
+./tcrman/test

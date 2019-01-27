@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#
+# watch buddy tcr variant - build && (test && commit || restore) variant of tcr
+# for more details - see https://medium.com/@tdeniffel/tcr-variants-test-commit-restore-bf6bd84b17d3
+#
+echo -e "executing wotcr variant"  &>>./tcrman/tcrman.log
+while true
+do
+    inotifywait -r -e modify .
+    ./tcrman/otcr
+done

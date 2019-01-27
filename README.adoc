@@ -1,0 +1,144 @@
+= TCRMAN - _(test && commit) || revert_ variant manager 
+Bill Turner
+:toc:
+:toc-placement!:
+
+toc::[]
+
+== Purpose
+To provide a quick way to change or apply appropriate *tcr* - 
+_(test && commit) || revert_ - variants to projects.
+
+
+== Motivation
+Using tcr can be likened to doing *TDD* on steriods. Inspired 
+by the blog post _TCR Variants (test && commit || revert)_ (see
+References below) and the fact that I am a consultant, I wanted a
+simple tool for installing and switching variants as needed.
+
+It is hoped that this tool will:
+. increase adoption of tcr (and have more code driven by tests).
+. be flexible to meet needs of diverse development environments
+. expand upon variations 
+. share knowledge within the community.
+
+== Getting Started
+=== Linux Installation
+==== Initial Setup
+. Install inotify-tools, if not already installed. 
++
+`sudo apt install inotify-tools`
+. Clone this project
+. Create TCRMAN_HOME environment variable
+. Make tcrman script executable:
++
+`chmod u+x {tcrman-home}/tcrman`
+. Add {tcrman-home} to your path
+==== Project Setup
+. From your project root, run:
++
+`tcrman -i`
++
+This will install the default tcr into your project, which will use:
+. build automation: *gradle*
+. test using: *gradle*
+. version control: *git*
+. tcr variant: *rtcr* - the relaxed variant.
+
+=== Mac Installation
+_not yet implemented_
+
+=== Windows Installation
+_not yet implemented_
+
+=== Configuring tcrman
+You can configure tcrman to use a different build tool, version 
+control system or tcr variant. For example, run command:
+
+`tcrman -b gradle -t gradle -v git -x rtcr`
+
+This configures tcr to use gradle as a build tool, git for version
+control and the wtcr variant for tcr. You can configure any or all
+as desired. 
+
+Note that when configuring tcr to one of the continuous variants, it will
+run the previously defined variant continuously. If you to run a different
+variant coninuously, you have two options. The first is to specify the
+target tcr variant, then specify the continuous variant. Alternatively,
+you can specify the continuous variant and the target in one command. For
+example:
+`tcrman --wtcr-rtcr`
+
+This will run the rtcr variant continuously using the wtcr variant.
+
+To see how tcr is currently configured, run:
+`tcrman --show`
+
+To see a list of available build tools, run:
+`tcrman --build`
+
+To see a list of available version control tools, run:
+`tcrman --vcs`
+
+To see a list of tcr variants, run:
+`tcrman --tcr`
+
+=== The (test && commit) || revert Variants
+Note that these can all be customized. See below.
+
+The default non-continuous variants are:
+|===
+| Variant | Description
+| btcr    | build && test && (commit || revert source and test code) 
+| ctcr    | -- not yet implemented -- 
+| gtcr    | -- not yet implemented -- gentle tcr stashes changes so they can be recovered 
+| otcr    | the original tcr. test && (commit || revert source and test code) 
+| *?tcr*    | the original tcr. test && (commit || revert source only) 
+| rtcr    | relaxed tcr. build && test && (commit || revert source only) 
+|===
+
+The default continuous variants are:
+|===
+| Variant | Description
+| wbtcr    | continuously runs the btcr variant
+| wctcr    | -- not yet implemented -- 
+| wgtcr    | -- not yet implemented -- gentle tcr stashes changes so they can be recovered 
+| wotcr    | continuously runs the otcr variant
+| *w?tcr*    | continuously runs the *w?tcr* variant 
+| wrtcr    | continuously runs the rtcr variant 
+|===
+
+=== Running tcrman
+As alluded to above, there are several options 
+
+=== Running (test && commit) || revert
+The tcr variants are of two types: non-continuous and continuous. Running
+a non-continuous variant is as simple as running `tcr` from your project root.
+
+A continuous variant is only slightly more complicated. Open a second shell
+and run `tcr` from there. That way you can observe what it is doing as you
+work.
+
+=== Customizing
+There is a large variety of environments and an even larger variety of tools to
+support those environments. A core tenant of this project is that it must be
+easily extensible. While the initial releases have been developed to meet the
+developers immediate concerns, it is hoped that as others adopt usage of 
+`tcrman` and begin create customizations, they will share back said customizations
+with the community. The patterns used thus far could change to make it more
+flexible, but developers who do create their own customizations would do well
+to understand and the patterns used as best they can.
+
+
+
+== References
+https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330[Limbo on the Cheap]
+https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3[TCR Variants (test && commit || revert)]
+https://medium.com/@tdeniffel/tcr-variant-the-storyteller-32c8fdb146f0[TCR Variant: The Storyteller]
+https://medium.com/@tdeniffel/tcr-test-commit-revert-a-test-alternative-to-tdd-6e6b03c22bec[TCR (test && commit || revert). How to use? Alternative to TDD?]
+
+
+
+
+include::CONTRIBUTORS.adoc[]
+

@@ -1,0 +1,5 @@
+echo -e "ctcr variant not yet implemented"  &>>./tcrman/tcrman.log
+#TODO this would be a hard loop rather than using inotifywait as does
+# wxxxx options. may not implemented
+# in post https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3
+# this is known as The buddy — Continous TCR

@@ -1,0 +1,2 @@
+echo -e 'running git revert-all.' &>>./tcrman/tcrman.log
+git reset — hard

@@ -1,0 +1,2 @@
+echo -e 'running git checkout HEAD.' &>>./tcrman/tcrman.log
+git checkout HEAD — src/main/
