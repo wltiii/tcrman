@@ -198,19 +198,11 @@ install() {
 }
 
 
-#Check the number of arguments. If none are passed, print help and exit.
-NUMARGS=$#
-if [ $NUMARGS -eq 0 ]; then
-  echo -e "\nNo options specified.\n"
-  HELP
-fi
-
-# TODO should x for setting variant be v? then what for vcs?)
-# TODO implement s for showing current configuration
-# TODO implement - for long options
 # process options
-# optspec=":hib:t:v:x:s-:"
-optspec=":hisb::t:v:x:"
+# TODO should x for setting variant be v? then what for vcs?)
+# TODO implement - for long options
+# optspec=":hsb:t:v:x:-:"
+optspec=":hsb:t:v:x:"
 while getopts "$optspec" optchar; do
         case "${optchar}" in
         #TODO implement long args
@@ -237,9 +229,6 @@ while getopts "$optspec" optchar; do
           x)
             TCR_OPT=$OPTARG
             ;;
-          i)
-            INSTALL_OPT="y"
-            ;;
           h)
             HELP
             ;;
@@ -247,21 +236,12 @@ while getopts "$optspec" optchar; do
             show
             ;;
           *)
-            # echo "Parsing build option: '-${optchar}'" >&2
             echo -e "\nInvalid option '-${optchar}'. See below.\n"
             echo -e "\nInvalid option '-${optchar}'. See below.\n" &>>./tcrman/tcrman.log
-            # HELP
+            HELP
             ;;
         esac
 done
-
-# if [[ ! -z $INSTALL_OPT ]]
-# then
-#     if [[ $INSTALL_OPT="y" ]]
-#     then
-#         install
-#     fi
-# fi
 
 install
 
