@@ -32,14 +32,14 @@ It is hoped that this tool will:
 . Create TCRMAN_HOME environment variable
 . Make tcrman script executable:
 +
-`chmod u+x {tcrman-home}/tcrman`
-. Add {tcrman-home} to your path
+`chmod u+x $TCRMAN_HOME/tcrman`
+. Add $TCRMAN_HOME to your path
 ==== Project Setup
 . From your project root, run:
 +
-`tcrman -i`
+`tcrman`
 +
-This will install the default tcr into your project, which will use:
+This will install the tcr into your project, which will use:
 . build automation: *gradle*
 . test using: *gradle*
 . version control: *git*
@@ -57,31 +57,20 @@ control system or tcr variant. For example, run command:
 
 `tcrman -b gradle -t gradle -v git -x rtcr`
 
-This configures tcr to use gradle as a build tool, git for version
+This configures tcr to use gradle as a build tool, gradle for testing, git for version
 control and the wtcr variant for tcr. You can configure any or all
 as desired. 
 
 Note that when configuring tcr to one of the continuous variants, it will
-run the previously defined variant continuously. If you to run a different
-variant coninuously, you have two options. The first is to specify the
-target tcr variant, then specify the continuous variant. Alternatively,
-you can specify the continuous variant and the target in one command. For
-example:
-`tcrman --wtcr-rtcr`
+run the previously defined variant continuously. Continuous variants
+are the variants prefixed with _w_. For example:
+`tcrman -x wrtcr`
 
-This will run the rtcr variant continuously using the wtcr variant.
+This will run the rtcr variant continuously.
 
-To see how tcr is currently configured, run:
-`tcrman --show`
-
-To see a list of available build tools, run:
-`tcrman --build`
-
-To see a list of available version control tools, run:
-`tcrman --vcs`
-
-To see a list of tcr variants, run:
-`tcrman --tcr`
+To see how tcrmAN is currently configured and available 
+options, run:
+`tcrman -s`
 
 === The (test && commit) || revert Variants
 Note that these can all be customized. See below.
@@ -108,9 +97,6 @@ The default continuous variants are:
 | wrtcr    | continuously runs the rtcr variant 
 |===
 
-=== Running tcrman
-As alluded to above, there are several options 
-
 === Running (test && commit) || revert
 The tcr variants are of two types: non-continuous and continuous. Running
 a non-continuous variant is as simple as running `tcr` from your project root.
@@ -124,10 +110,10 @@ There is a large variety of environments and an even larger variety of tools to
 support those environments. A core tenant of this project is that it must be
 easily extensible. While the initial releases have been developed to meet the
 developers immediate concerns, it is hoped that as others adopt usage of 
-`tcrman` and begin create customizations, they will share back said customizations
+*_tcrman_* and begin create customizations, they will share back said customizations
 with the community. The patterns used thus far could change to make it more
 flexible, but developers who do create their own customizations would do well
-to understand and the patterns used as best they can.
+to understand and use the patterns used as best they can.
 
 
 
@@ -136,9 +122,3 @@ https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330[Limbo on the C
 https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3[TCR Variants (test && commit || revert)]
 https://medium.com/@tdeniffel/tcr-variant-the-storyteller-32c8fdb146f0[TCR Variant: The Storyteller]
 https://medium.com/@tdeniffel/tcr-test-commit-revert-a-test-alternative-to-tdd-6e6b03c22bec[TCR (test && commit || revert). How to use? Alternative to TDD?]
-
-
-
-
-include::CONTRIBUTORS.adoc[]
-
