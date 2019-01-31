@@ -71,6 +71,7 @@ This will run the rtcr variant continuously.
 
 To see how tcrman is currently configured and available 
 options, run:
+
 `tcrman -s`
 
 === The (test && commit) || revert Variants
