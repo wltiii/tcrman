@@ -12,9 +12,9 @@ _(test && commit) || revert_ - variants to projects.
 
 == Motivation
 Using tcr can be likened to doing *TDD* on steriods. Inspired 
-by the blog post _TCR Variants (test && commit || revert)_ (see
-References below) and the fact that I am a consultant, I wanted a
-simple tool for installing and switching variants as needed.
+by projects like _SDKMAN_, the blog post _TCR Variants (test && commit || revert)_ and 
+the fact that many developers work as consultants or on diverse projects with
+different toolchains, a simple tool for installing and switching variants seemed necessary.
 
 It is hoped that this tool will:
 . increase adoption of tcr (and have more code driven by tests).
@@ -43,7 +43,7 @@ This will install the tcr into your project, which will use:
 . build automation: *gradle*
 . test using: *gradle*
 . version control: *git*
-. tcr variant: *rtcr* - the relaxed variant.
+. tcr variant: *otcr* - the relaxed variant.
 
 === Mac Installation
 _not yet implemented_
@@ -64,11 +64,12 @@ as desired.
 Note that when configuring tcr to one of the continuous variants, it will
 run the previously defined variant continuously. Continuous variants
 are the variants prefixed with _w_. For example:
+
 `tcrman -x wrtcr`
 
 This will run the rtcr variant continuously.
 
-To see how tcrmAN is currently configured and available 
+To see how tcrman is currently configured and available 
 options, run:
 `tcrman -s`
 
@@ -77,25 +78,24 @@ Note that these can all be customized. See below.
 
 The default non-continuous variants are:
 |===
-| Variant | Description
-| btcr    | build && test && (commit || revert source and test code) 
-| ctcr    | -- not yet implemented -- 
-| gtcr    | -- not yet implemented -- gentle tcr stashes changes so they can be recovered 
-| otcr    | the original tcr. test && (commit || revert source and test code) 
-| *?tcr*    | the original tcr. test && (commit || revert source only) 
-| rtcr    | relaxed tcr. build && test && (commit || revert source only) 
+| Variant | Builds? | Tests? | Commits? | Reverts Source? | Reverts Tests? | Continuous?
+| btcr    |    Y    |    Y   |    Y     |        Y        |       Y        |     N
+| btdd    |    Y    |    Y   |    N     |        N        |       N        |     N
+| ctcr*   |    -    |    -   |    -     |        -        |       -        |     -
+| gtcr*   |    -    |    -   |    -     |        -        |       -        |     -
+| otcr    |    N    |    Y   |    Y     |        Y        |       Y        |     N 
+| rtcr    |    Y    |    Y   |    Y     |        Y        |       N        |     N
+| tdd     |    N    |    Y   |    N     |        N        |       N        |     N 
+| wbtcr   |    Y    |    Y   |    Y     |        Y        |       Y        |     Y
+| wbtdd   |    Y    |    Y   |    N     |        N        |       N        |     Y
+| wctcr*  |    -    |    -   |    -     |        -        |       -        |     -
+| wgtcr*  |    -    |    -   |    -     |        -        |       -        |     -
+| wotcr   |    N    |    Y   |    Y     |        Y        |       Y        |     Y 
+| wrtcr   |    Y    |    Y   |    Y     |        Y        |       N        |     Y
+| wtdd    |    N    |    Y   |    N     |        N        |       N        |     Y 
 |===
 
-The default continuous variants are:
-|===
-| Variant | Description
-| wbtcr    | continuously runs the btcr variant
-| wctcr    | -- not yet implemented -- 
-| wgtcr    | -- not yet implemented -- gentle tcr stashes changes so they can be recovered 
-| wotcr    | continuously runs the otcr variant
-| *w?tcr*    | continuously runs the *w?tcr* variant 
-| wrtcr    | continuously runs the rtcr variant 
-|===
+* Not yet implemented.
 
 === Running (test && commit) || revert
 The tcr variants are of two types: non-continuous and continuous. Running
@@ -118,7 +118,7 @@ to understand and use the patterns used as best they can.
 
 
 == References
-https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330[Limbo on the Cheap]
-https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3[TCR Variants (test && commit || revert)]
-https://medium.com/@tdeniffel/tcr-variant-the-storyteller-32c8fdb146f0[TCR Variant: The Storyteller]
-https://medium.com/@tdeniffel/tcr-test-commit-revert-a-test-alternative-to-tdd-6e6b03c22bec[TCR (test && commit || revert). How to use? Alternative to TDD?]
+. https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330[Limbo on the Cheap]
+. https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3[TCR Variants (test && commit || revert)]
+. https://medium.com/@tdeniffel/tcr-variant-the-storyteller-32c8fdb146f0[TCR Variant: The Storyteller]
+. https://medium.com/@tdeniffel/tcr-test-commit-revert-a-test-alternative-to-tdd-6e6b03c22bec[TCR (test && commit || revert). How to use? Alternative to TDD?]
