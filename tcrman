@@ -3,15 +3,14 @@
 # performs initial installation of tcrman into a project
 #
 echo 'tcrman - (test && commit) || revert variant manager'
+# echo -e "Copyright © 2019 William Lodge Turner III"
+echo 
 
-# set default options
-#Initialize variables to default values.
-INSTALL_OPT="n"
-BUILD_OPT="gradle"
-TEST_OPT="gradle"
-VCS_OPT="git"
-TCR_OPT="rtcr"
-HELP_OPT="n"
+# options from command override options from config
+BUILD_OPT=""
+TEST_OPT=""
+VCS_OPT=""
+TCR_OPT=""
 
 #Help function
 function HELP {
@@ -175,10 +174,68 @@ configure() {
     setTcrVariant
 }
 
+createDefaultConfig() {
+    echo -e "createDefaultConfig()" &>>./tcrman/tcrman.log
+
+    if [ ! -f "./tcrman/default.config" ]; then
+        ln -sfv $TCRMAN_HOME/config/default.config ./tcrman/default.config &>>./tcrman/tcrman.log
+    fi
+    if [ ! -f "./tcrman/tcrman.config" ]; then
+        cp ./tcrman/default.config ./tcrman/tcrman.config &>>./tcrman/tcrman.log
+    fi
+}
+
+# TODO make sure this works
+loadConfig() {
+    echo -e "loadConfig()" &>>./tcrman/tcrman.log
+
+    IFS="="
+    while read -r name value
+    do
+        opt=$name
+        optval=$value
+        case $opt in
+            BUILD_OPT)
+                if [ -z $BUILD_OPT ]; then
+                    BUILD_OPT=$optval
+                fi
+                ;;
+            TEST_OPT)
+                if [ -z $TEST_OPT ]; then
+                    TEST_OPT=$optval
+                fi
+                ;;
+            VCS_OPT)
+                if [ -z $VCS_OPT ]; then
+                    VCS_OPT=$optval
+                fi
+                ;;
+            TCR_OPT)
+                if [ -z $TCR_OPT ]; then
+                    TCR_OPT=$optval
+                fi
+                ;;
+        esac
+    done < ./tcrman/tcrman.config    
+}
+
+saveConfig() {
+    echo -e "saveConfig()" &>>./tcrman/tcrman.log
+
+    echo -e "BUILD_OPT=$BUILD_OPT" > ./tcrman/tcrman.config
+    echo -e "TEST_OPT=$TEST_OPT" >> ./tcrman/tcrman.config
+    echo -e "VCS_OPT=$VCS_OPT" >> ./tcrman/tcrman.config
+    echo -e "TCR_OPT=$TCR_OPT" >> ./tcrman/tcrman.config
+}
+
 init() {
     if [ ! -d "./tcrman" ]; then
         mkdir ./tcrman
     fi
+
+    createDefaultConfig
+    loadConfig
+    saveConfig
 }
 
 install() {
@@ -188,7 +245,7 @@ install() {
     echo "###################"  &>>./tcrman/tcrman.log
     echo "# TCRMAN starting #"  &>>./tcrman/tcrman.log
     echo "###################"  &>>./tcrman/tcrman.log
-    echo -e "tcrman: configuring tcr for use with..."
+    echo -e "configuring tcr using:"
     echo -e "\tbuild automation: " $BUILD_OPT
     echo -e "\ttest: " $TEST_OPT
     echo -e "\tversion control: " $VCS_OPT
