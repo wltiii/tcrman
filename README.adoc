@@ -17,6 +17,7 @@ the fact that many developers work as consultants or on diverse projects with
 different toolchains, a simple tool for installing and switching variants seemed necessary.
 
 It is hoped that this tool will:
+
 . increase adoption of tcr (and have more code driven by tests).
 . be flexible to meet needs of diverse development environments
 . expand upon variations 
