@@ -185,7 +185,6 @@ createDefaultConfig() {
     fi
 }
 
-# TODO make sure this works
 loadConfig() {
     echo -e "loadConfig()" &>>./tcrman/tcrman.log
 
