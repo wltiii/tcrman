@@ -40,11 +40,14 @@ It is hoped that this tool will:
 +
 `tcrman`
 +
-This will install the tcr into your project, which will use:
+This will install tcr into your project, which will use:
 . build automation: *gradle*
 . test using: *gradle*
 . version control: *git*
-. tcr variant: *otcr* - the relaxed variant.
+. tcr variant: *tcra* - the test-commit-revert-all version - the original variant.
+
+A file and directory will be added to the root of your project: _tcr_ 
+and _tcrman_ respectively.
 
 === Mac Installation
 _not yet implemented_
@@ -56,56 +59,42 @@ _not yet implemented_
 You can configure tcrman to use a different build tool, version 
 control system or tcr variant. For example, run command:
 
-`tcrman -b gradle -t gradle -v git -x rtcr`
+`tcrman -b gradle -t gradle -v git -x btcrs`
 
-This configures tcr to use gradle as a build tool, gradle for testing, git for version
-control and the wtcr variant for tcr. You can configure any or all
-as desired. 
+Most projects will typically use the same build (-b), test (-t) and version control (-v)
+toolchains throughout its lifecycle. 
 
-Note that when configuring tcr to one of the continuous variants, it will
-run the previously defined variant continuously. Continuous variants
-are the variants prefixed with _w_. For example:
-
-`tcrman -x wrtcr`
-
-This will run the rtcr variant continuously.
-
-To see how tcrman is currently configured and available 
-options, run:
+More likely would be to change the executable variant (-x). The table below indicates what
+each variant will do. You can also quickly see the available variants by running the show
+command (-s):
 
 `tcrman -s`
+
+Any of the options set will remain in effect until changed.
 
 === The (test && commit) || revert Variants
 Note that these can all be customized. See below.
 
-The default non-continuous variants are:
+The table below explains the variants. Each variant, except the TDD variants, are essentially
+abbreviations for the actions taken.
 |===
-| Variant | Builds? | Tests? | Commits? | Reverts Source? | Reverts Tests? | Continuous?
-| btcr    |    Y    |    Y   |    Y     |        Y        |       Y        |     N
-| btdd    |    Y    |    Y   |    N     |        N        |       N        |     N
-| ctcr*   |    -    |    -   |    -     |        -        |       -        |     -
-| gtcr*   |    -    |    -   |    -     |        -        |       -        |     -
-| otcr    |    N    |    Y   |    Y     |        Y        |       Y        |     N 
-| rtcr    |    Y    |    Y   |    Y     |        Y        |       N        |     N
-| tdd     |    N    |    Y   |    N     |        N        |       N        |     N 
-| wbtcr   |    Y    |    Y   |    Y     |        Y        |       Y        |     Y
-| wbtdd   |    Y    |    Y   |    N     |        N        |       N        |     Y
-| wctcr*  |    -    |    -   |    -     |        -        |       -        |     -
-| wgtcr*  |    -    |    -   |    -     |        -        |       -        |     -
-| wotcr   |    N    |    Y   |    Y     |        Y        |       Y        |     Y 
-| wrtcr   |    Y    |    Y   |    Y     |        Y        |       N        |     Y
-| wtdd    |    N    |    Y   |    N     |        N        |       N        |     Y 
+| Variant | *B*uilds? | *T*ests? | *C*ommits? | *R*everts *S*ource? | *R*everts *A*ll? | *W*atch for save?
+| btcra   |    Y      |    Y     |    Y       |        N            |       Y          |     N
+| btcraw  |    Y      |    Y     |    Y       |        N            |       Y          |     Y
+| btcrs   |    Y      |    Y     |    Y       |        Y            |       N          |     N
+| btcrsw  |    Y      |    Y     |    Y       |        Y            |       N          |     Y
+| btdd    |    Y      |    Y     |    N       |        N            |       N          |     N
+| btddw   |    Y      |    Y     |    N       |        N            |       N          |     Y
+| tcra    |    N      |    Y     |    Y       |        Y            |       Y          |     N 
+| tcraw   |    N      |    Y     |    Y       |        N            |       Y          |     Y 
+| tdd     |    N      |    Y     |    N       |        N            |       N          |     N 
+| tddw    |    N      |    Y     |    N       |        N            |       N          |     Y 
 |===
 
-* Not yet implemented.
 
 === Running (test && commit) || revert
-The tcr variants are of two types: non-continuous and continuous. Running
-a non-continuous variant is as simple as running `tcr` from your project root.
+The tcr variants are all simply invoked by running `tcr` from your project root.
 
-A continuous variant is only slightly more complicated. Open a second shell
-and run `tcr` from there. That way you can observe what it is doing as you
-work.
 
 === Customizing
 There is a large variety of environments and an even larger variety of tools to
