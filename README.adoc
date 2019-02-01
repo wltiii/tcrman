@@ -40,11 +40,6 @@ It is hoped that this tool will:
 +
 `tcrman`
 +
-This will install tcr into your project, which will use:
-. build automation: *gradle*
-. test using: *gradle*
-. version control: *git*
-. tcr variant: *tcra* - the test-commit-revert-all version - the original variant.
 
 A file and directory will be added to the root of your project: _tcr_ 
 and _tcrman_ respectively.
@@ -55,40 +50,77 @@ _not yet implemented_
 === Windows Installation
 _not yet implemented_
 
-=== Configuring tcrman
-You can configure tcrman to use a different build tool, version 
-control system or tcr variant. For example, run command:
+== Configuring tcrman
+=== The default configuration
+Upon initial default installation, tcr for your project will be configured as follows:
+. build automation: *gradle*
+. test using: *gradle*
+. version control: *git*
+. tcr variant: *tcra* - the test-commit-revert-all version - the original variant.
+. watcher: no
+
+Of course, if you use any of the flags on initial install, explained below, your setup 
+will be different.  For example, run command:
+
+`tcrman -b gradle -t gradle -v git -x btcrs -w y`
+
+Will yield configuration: 
+. build automation: *gradle*
+. test using: *gradle*
+. version control: *git*
+. tcr variant: *btcrs*
+. watcher: y
+
+Re-running `tcrman` at anytime using the flags will use those settings for that and
+subsequent uses of tcrman.
+
+=== Configuring build, test and commit/revert toolchains
+Once set, most projects will typically use the same build, test and version control
+toolchains throughout its lifecycle. As you can probably guess from the explanation 
+above, the following option flags are used to configure the toolchains. The flags 
+for setting these three are:
+
+. *-b* - the build option.
+. *-t* - the test option.
+. *-v* - the version control option.
+
+=== Configuring tcr variant
+The flag for setting the tcr variant to be executed is *-x*.
+
+=== Configuring watcher
+A watcher is used to trigger the configured tcr upon changes in
+your projects `src` directory. The flag is *-w* and takes for an 
+arg either a *y* to activate a watcher and *n* to disable the 
+watcher. The default is disabled.
 
 `tcrman -b gradle -t gradle -v git -x btcrs`
 
-Most projects will typically use the same build (-b), test (-t) and version control (-v)
-toolchains throughout its lifecycle. 
+=== Showing the current configuration and available options
+Your current configuration is shown at the start of tcrman. If
+you wish to also know what options are available, use the *-s*
+to show the current config and available options. Note that
+no other flags will be processed if this flag is used.
 
-More likely would be to change the executable variant (-x). The table below indicates what
-each variant will do. You can also quickly see the available variants by running the show
-command (-s):
-
-`tcrman -s`
-
-Any of the options set will remain in effect until changed.
+=== Getting help
+As you would expect, *-h* displays tcrman help.
 
 === The (test && commit) || revert Variants
 Note that these can all be customized. See below.
 
 The table below explains the variants. Each variant, except the TDD variants, are essentially
-abbreviations for the actions taken.
+abbreviations for the actions taken. The highlighted characters in
+the heading are represented in the variant that implements them,
+except for the _tdd_ variant which is simply an implementation of
+test only. 
+
+.TCR Variants
 |===
-| Variant | *B*uilds? | *T*ests? | *C*ommits? | *R*everts *S*ource? | *R*everts *A*ll? | *W*atch for save?
-| btcra   |    Y      |    Y     |    Y       |        N            |       Y          |     N
-| btcraw  |    Y      |    Y     |    Y       |        N            |       Y          |     Y
-| btcrs   |    Y      |    Y     |    Y       |        Y            |       N          |     N
-| btcrsw  |    Y      |    Y     |    Y       |        Y            |       N          |     Y
-| btdd    |    Y      |    Y     |    N       |        N            |       N          |     N
-| btddw   |    Y      |    Y     |    N       |        N            |       N          |     Y
-| tcra    |    N      |    Y     |    Y       |        Y            |       Y          |     N 
-| tcraw   |    N      |    Y     |    Y       |        N            |       Y          |     Y 
-| tdd     |    N      |    Y     |    N       |        N            |       N          |     N 
-| tddw    |    N      |    Y     |    N       |        N            |       N          |     Y 
+| Variant | **B**uilds? | **T**ests? | **C**ommits? | **R**everts **S**ource? | **R**everts **A**ll?
+| btcra   |    Y      |    Y     |    Y       |        N            |       Y         
+| btcrs   |    Y      |    Y     |    Y       |        Y            |       N         
+| btdd    |    Y      |    Y     |    N       |        N            |       N         
+| tcra    |    N      |    Y     |    Y       |        Y            |       Y          
+| tdd     |    N      |    Y     |    N       |        N            |       N          
 |===
 
 
