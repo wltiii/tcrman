@@ -1,9 +1,0 @@
-echo -e "gtcr variant not yet implemented"  &>>./tcrman/tcrman.log
-
-## git stash drop 0 2&>/dev/null; git add -A && git stash push
-
-# After TCR kicked in and reverted our code, we can still type
-# git stash apply
-
-# but, okay, where is the test?
-$ ./buildIt && (git stash drop 0 2&>/dev/null; git add -A && git stash push)

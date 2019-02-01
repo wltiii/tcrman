@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-echo -e "executing wtdd variant"  &>>./tcrman/tcrman.log
-while true
-do
-    inotifywait -r -e modify .
-    ./tcrman/tdd
-done
