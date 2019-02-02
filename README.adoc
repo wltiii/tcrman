@@ -72,7 +72,7 @@ Will yield configuration:
 . watcher: y
 
 Re-running `tcrman` at anytime using the flags will use those settings for that and
-subsequent uses of tcrman.
+subsequent instantiations of tcrman.
 
 === Configuring build, test and commit/revert toolchains
 Once set, most projects will typically use the same build, test and version control
@@ -104,14 +104,13 @@ no other flags will be processed if this flag is used.
 === Getting help
 As you would expect, *-h* displays tcrman help.
 
-=== The (test && commit) || revert Variants
+== The (test && commit) || revert Variants
 Note that these can all be customized. See below.
 
 The table below explains the variants. Each variant, except the TDD variants, are essentially
 abbreviations for the actions taken. The highlighted characters in
 the heading are represented in the variant that implements them,
-except for the _tdd_ variant which is simply an implementation of
-test only. 
+except for the _tdd_ variants (tdd and btdd) which are test only and build and test only. 
 
 .TCR Variants
 |===
@@ -123,12 +122,7 @@ test only.
 | tdd     |    N      |    Y     |    N       |        N            |       N          
 |===
 
-
-=== Running (test && commit) || revert
-The tcr variants are all simply invoked by running `tcr` from your project root.
-
-
-=== Customizing
+== Advanced tcrman customization
 There is a large variety of environments and an even larger variety of tools to
 support those environments. A core tenant of this project is that it must be
 easily extensible. While the initial releases have been developed to meet the
@@ -138,9 +132,29 @@ with the community. The patterns used thus far could change to make it more
 flexible, but developers who do create their own customizations would do well
 to understand and use the patterns used as best they can.
 
+=== Toolchain Customization
+Explaining customization is best done by example. To add _sbt_ as a build tool, you
+would:
+. Create the an _sbt_ buildTools directory: `$TCRMAN_HOME/scripts/buildTools/sbt`
+. Add a script named _build_ that performs the necessary build actions.
 
+It should be obvious that the name of the tool directory, in this case _sbt_, could
+be anything meaningful to you, your team or the community as a whole (if you share it
+with us!).
 
-== References
+Adding new test or vcs tools is similar, only substituting _testTools_ or _vcsTools_ 
+for _buildTools_ and an appropriate tool chain name for _sbt_. You would then needs
+to add instances of all the scripts required of each. For _testTools_, this would be
+_test_. For _vcsTools_, this would be _commit_, _revert-all_ and _revert-source_.
+
+=== Variant Customization
+Variant customization is even simpler than customizing the toolchains. All you need
+do is add an appropriately named script to `$TCRMAN_HOME/variants`.
+
+== Running (test && commit) || revert
+The tcr variants are all simply invoked by running `tcr` from your project root.
+
+== Further Information
 . https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330[Limbo on the Cheap]
 . https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3[TCR Variants (test && commit || revert)]
 . https://medium.com/@tdeniffel/tcr-variant-the-storyteller-32c8fdb146f0[TCR Variant: The Storyteller]
