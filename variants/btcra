@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #
-# btcr variant - build && (test && commit || restore)
-# for more details - see https://medium.com/@tdeniffel/tcr-variants-test-commit-restore-bf6bd84b17d3
+# btcra variant - build && ( (test && commit) || revert all)
 #
-echo -e "executing btcr variant"  &>>./tcrman/tcrman.log
-./tcrman/build && (./tcrman/test && ./tcrman/commit || ./tcrman/revert-all)
+echo -e "executing btcra variant"  &>>./tcrman/tcrman.log
+./tcrman/build && ( (./tcrman/test && ./tcrman/commit) || ./tcrman/revert-all)

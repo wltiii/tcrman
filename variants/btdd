@@ -1,2 +1,6 @@
+#!/usr/bin/env bash
+#
+# btdd variant - build && test
+#
 echo -e "executing btdd variant"  &>>./tcrman/tcrman.log
 ./tcrman/build && ./tcrman/test

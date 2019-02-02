@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #
-# the original tcr - test && commit || restore
-# for more details - see https://medium.com/@tdeniffel/tcr-variants-test-commit-restore-bf6bd84b17d3
+# tcra variant - (test && commit) || revert all - the original tcr
 #
-echo -e "executing otcr variant"  &>>./tcrman/tcrman.log
+echo -e "executing tcra variant"  &>>./tcrman/tcrman.log
 (./tcrman/test && ./tcrman/commit) || ./tcrman/revert-all
