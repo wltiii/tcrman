@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#
+# adds a "watcher" wrapper around the active tcr variant
+#
+echo -e "executing watcher"  &>>./tcrman/tcrman.log
+while true
+do
+    inotifywait -r -e modify .
+    ./tcrman/tcr
+done

@@ -11,6 +11,7 @@ BUILD_OPT=""
 TEST_OPT=""
 VCS_OPT=""
 TCR_OPT=""
+WATCH_OPT=""
 
 #Help function
 function HELP {
@@ -64,6 +65,16 @@ isHomeDefined() {
     fi
 }
 
+showCurrentConfig() {
+    echo -e "Current tcr configuration:"
+    echo -e "\tbuild automation: " $BUILD_OPT
+    echo -e "\ttest: " $TEST_OPT
+    echo -e "\tversion control: " $VCS_OPT
+    echo -e "\ttcr variant:" $TCR_OPT
+    echo -e "\twatch:" $WATCH_OPT
+    echo -e ""
+}
+
 showOptions() {
     index=1
 
@@ -72,6 +83,7 @@ showOptions() {
         echo -e "\t${index}. ${arg}"
         let "index++"
     done
+    echo -e ""
 }
 
 showBuildOptions() {
@@ -99,6 +111,8 @@ showTcrVariants() {
 }
 
 show() {
+    loadConfig
+    showCurrentConfig
     showBuildOptions
     showTestOptions
     showVcsOptions
@@ -167,11 +181,20 @@ setTcrVariant() {
     chmod u+x tcr
 }
 
+setWatcher() {
+    echo -e "configuring watcher to: " $WATCH_OPT &>>./tcrman/tcrman.log
+    
+    if [ "$WATCH_OPT" = "y" ]; then
+        ln -sfv $TCRMAN_HOME/bin/watcher ./tcr &>>./tcrman/tcrman.log
+    fi
+}
+
 configure() {
     setBuild
     setTest
     setVcs
     setTcrVariant
+    setWatcher
 }
 
 createDefaultConfig() {
@@ -188,6 +211,7 @@ createDefaultConfig() {
 loadConfig() {
     echo -e "loadConfig()" &>>./tcrman/tcrman.log
 
+    OLDIFS=$IFS
     IFS="="
     while read -r name value
     do
@@ -214,8 +238,14 @@ loadConfig() {
                     TCR_OPT=$optval
                 fi
                 ;;
+            WATCH_OPT)
+                if [ -z $WATCH_OPT ]; then
+                    WATCH_OPT=$optval
+                fi
+                ;;
         esac
-    done < ./tcrman/tcrman.config    
+    done < ./tcrman/tcrman.config  
+    IFS=$OLDIFS  
 }
 
 saveConfig() {
@@ -225,6 +255,7 @@ saveConfig() {
     echo -e "TEST_OPT=$TEST_OPT" >> ./tcrman/tcrman.config
     echo -e "VCS_OPT=$VCS_OPT" >> ./tcrman/tcrman.config
     echo -e "TCR_OPT=$TCR_OPT" >> ./tcrman/tcrman.config
+    echo -e "WATCH_OPT=$WATCH_OPT" >> ./tcrman/tcrman.config
 }
 
 init() {
@@ -244,21 +275,16 @@ install() {
     echo "###################"  &>>./tcrman/tcrman.log
     echo "# TCRMAN starting #"  &>>./tcrman/tcrman.log
     echo "###################"  &>>./tcrman/tcrman.log
-    echo -e "configuring tcr using:"
-    echo -e "\tbuild automation: " $BUILD_OPT
-    echo -e "\ttest: " $TEST_OPT
-    echo -e "\tversion control: " $VCS_OPT
-    echo -e "\ttcr variant:" $TCR_OPT
-
+    
+    showCurrentConfig
     configure
 }
 
 
 # process options
-# TODO should x for setting variant be v? then what for vcs?)
 # TODO implement - for long options
-# optspec=":hsb:t:v:x:-:"
-optspec=":hsb:t:v:x:"
+# optspec=":hsb:t:v:w:x:-:"
+optspec=":hsb:t:v:w:x:"
 while getopts "$optspec" optchar; do
         case "${optchar}" in
         #TODO implement long args
@@ -281,6 +307,9 @@ while getopts "$optspec" optchar; do
             ;;
           v)
             VCS_OPT=$OPTARG
+            ;;
+          w)
+            WATCH_OPT=$OPTARG
             ;;
           x)
             TCR_OPT=$OPTARG
