@@ -1,4 +1,4 @@
-= TCRMAN - _(test && commit) || revert_ variant manager 
+= TCRMAN - _(test && commit) || revert_ variant manager
 Bill Turner
 :toc:
 :toc-placement!:
@@ -6,13 +6,13 @@ Bill Turner
 toc::[]
 
 == Purpose
-To provide a quick way to change or apply appropriate *tcr* - 
+To provide a quick way to change or apply appropriate *tcr* -
 _(test && commit) || revert_ - variants to projects.
 
 
 == Motivation
-Using tcr can be likened to doing *TDD* on steriods. Inspired 
-by projects like _SDKMAN_, the blog post _TCR Variants (test && commit || revert)_ and 
+Using tcr can be likened to doing *TDD* on steriods. Inspired
+by projects like _SDKMAN_, the blog post _TCR Variants (test && commit || revert)_ and
 the fact that many developers work as consultants or on diverse projects with
 different toolchains, a simple tool for installing and switching variants seemed necessary.
 
@@ -20,13 +20,13 @@ It is hoped that this tool will:
 
 . increase adoption of tcr (and have more code driven by tests).
 . be flexible to meet needs of diverse development environments
-. expand upon variations 
+. expand upon variations
 . share knowledge within the community.
 
 == Getting Started
 === Linux Installation
 ==== Initial Setup
-. Install inotify-tools, if not already installed. 
+. Install inotify-tools, if not already installed.
 +
 `sudo apt install inotify-tools`
 . Clone this project
@@ -41,7 +41,7 @@ It is hoped that this tool will:
 `tcrman`
 +
 
-A file and directory will be added to the root of your project: _tcr_ 
+A file and directory will be added to the root of your project: _tcr_
 and _tcrman_ respectively.
 
 === Mac Installation
@@ -59,12 +59,12 @@ Upon initial default installation, tcr for your project will be configured as fo
 . tcr variant: *tcra* - the test-commit-revert-all version - the original variant.
 . watcher: no
 
-Of course, if you use any of the flags on initial install, explained below, your setup 
+Of course, if you use any of the flags on initial install, explained below, your setup
 will be different.  For example, run command:
 
 `tcrman -b gradle -t gradle -v git -x btcrs -w y`
 
-Will yield configuration: 
+Will yield configuration:
 . build automation: *gradle*
 . test using: *gradle*
 . version control: *git*
@@ -76,8 +76,8 @@ subsequent instantiations of tcrman.
 
 === Configuring build, test and commit/revert toolchains
 Once set, most projects will typically use the same build, test and version control
-toolchains throughout its lifecycle. As you can probably guess from the explanation 
-above, the following option flags are used to configure the toolchains. The flags 
+toolchains throughout its lifecycle. As you can probably guess from the explanation
+above, the following option flags are used to configure the toolchains. The flags
 for setting these three are:
 
 . *-b* - the build option.
@@ -88,12 +88,14 @@ for setting these three are:
 The flag for setting the tcr variant to be executed is *-x*.
 
 === Configuring watcher
-A watcher is used to trigger the configured tcr upon changes in
-your projects `src` directory. The flag is *-w* and takes for an 
-arg either a *y* to activate a watcher and *n* to disable the 
-watcher. The default is disabled.
+Similar to using a tool such as *infinitest* (see below), karma, or other continuous
+test runners, a watcher is used to trigger the configured tcr upon changes in
+your projects `src` directory.
 
-`tcrman -b gradle -t gradle -v git -x btcrs`
+The flag is *-w* and takes args:
+
+. *y* to activate a watcher
+. *n* to disable the watcher (the default)
 
 === Showing the current configuration and available options
 Your current configuration is shown at the start of tcrman. If
@@ -110,23 +112,23 @@ Note that these can all be customized. See below.
 The table below explains the variants. Each variant, except the TDD variants, are essentially
 abbreviations for the actions taken. The highlighted characters in
 the heading are represented in the variant that implements them,
-except for the _tdd_ variants (tdd and btdd) which are test only and build and test only. 
+except for the _tdd_ variants (tdd and btdd) which are test only and build and test only.
 
 .TCR Variants
 |===
 | Variant | **B**uilds? | **T**ests? | **C**ommits? | **R**everts **S**ource? | **R**everts **A**ll?
-| btcra   |    Y      |    Y     |    Y       |        N            |       Y         
-| btcrs   |    Y      |    Y     |    Y       |        Y            |       N         
-| btdd    |    Y      |    Y     |    N       |        N            |       N         
-| tcra    |    N      |    Y     |    Y       |        Y            |       Y          
-| tdd     |    N      |    Y     |    N       |        N            |       N          
+| btcra   |    Y      |    Y     |    Y       |        N            |       Y
+| btcrs   |    Y      |    Y     |    Y       |        Y            |       N
+| btdd    |    Y      |    Y     |    N       |        N            |       N
+| tcra    |    N      |    Y     |    Y       |        Y            |       Y
+| tdd     |    N      |    Y     |    N       |        N            |       N
 |===
 
 == Advanced tcrman customization
 There is a large variety of environments and an even larger variety of tools to
 support those environments. A core tenant of this project is that it must be
 easily extensible. While the initial releases have been developed to meet the
-developers immediate concerns, it is hoped that as others adopt usage of 
+developers immediate concerns, it is hoped that as others adopt usage of
 *_tcrman_* and begin create customizations, they will share back said customizations
 with the community. The patterns used thus far could change to make it more
 flexible, but developers who do create their own customizations would do well
@@ -142,7 +144,7 @@ It should be obvious that the name of the tool directory, in this case _sbt_, co
 be anything meaningful to you, your team or the community as a whole (if you share it
 with us!).
 
-Adding new test or vcs tools is similar, only substituting _testTools_ or _vcsTools_ 
+Adding new test or vcs tools is similar, only substituting _testTools_ or _vcsTools_
 for _buildTools_ and an appropriate tool chain name for _sbt_. You would then needs
 to add instances of all the scripts required of each. For _testTools_, this would be
 _test_. For _vcsTools_, this would be _commit_, _revert-all_ and _revert-source_.
@@ -159,3 +161,4 @@ The tcr variants are all simply invoked by running `tcr` from your project root.
 . https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3[TCR Variants (test && commit || revert)]
 . https://medium.com/@tdeniffel/tcr-variant-the-storyteller-32c8fdb146f0[TCR Variant: The Storyteller]
 . https://medium.com/@tdeniffel/tcr-test-commit-revert-a-test-alternative-to-tdd-6e6b03c22bec[TCR (test && commit || revert). How to use? Alternative to TDD?]
+. https://infinitest.github.io/[infinitest]
