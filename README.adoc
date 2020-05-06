@@ -35,6 +35,7 @@ It is hoped that this tool will:
 +
 `chmod u+x $TCRMAN_HOME/tcrman`
 . Add $TCRMAN_HOME to your path
+
 ==== Project Setup
 . From your project root, run:
 +
