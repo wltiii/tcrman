@@ -3,8 +3,19 @@
 # performs initial installation of tcrman into a project
 #
 echo 'tcrman - (test && commit) || revert variant manager'
-# echo -e "Copyright © 2019 William Lodge Turner III"
-echo 
+echo -e "\tCopyright © 2019 William Lodge Turner III"
+
+if [[ "${BASH_VERSINFO:-0}" -lt 4 ]]
+then
+  echo "========================================================"
+  echo "ERROR - You must be running bash version 4.0 or higher."
+  echo "========================================================"
+  echo "Your version is:"
+  echo "bash --version $(bash --version)"
+  exit
+fi
+
+echo
 
 # options from command override options from config
 BUILD_OPT=""
