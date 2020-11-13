@@ -75,7 +75,11 @@ _not yet implemented_
 === The default configuration
 
 Upon initial default installation, tcr for your project will be configured as follows:
-. build automation: *gradle* . test using: *gradle* . version control: *git* . tcr variant: *tcra* - the test-commit-revert-all version - the original variant.
+
+. build automation: *gradle*
+. test using: *gradle*
+. version control: *git*
+. tcr variant: *tcra* - the test-commit-revert-all version - the original variant.
 . watcher: no
 
 Of course, if you use any of the flags on initial install, explained below, your setup will be different.
@@ -84,7 +88,12 @@ For example, run command:
 `tcrman -b gradle -t gradle -v git -x btcrs -w y`
 
 Will yield configuration:
-. build automation: *gradle* . test using: *gradle* . version control: *git* . tcr variant: *btcrs* . watcher: y
+
+. build automation: *gradle*
+. test using: *gradle*
+. version control: *git*
+. tcr variant: *btcrs*
+. watcher: y
 
 Re-running `tcrman` at anytime using the flags will use those settings for that and subsequent instantiations of tcrman.
 
